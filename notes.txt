@@ -1,0 +1,4 @@
+Javascript Mastery
+- youtube url: https://www.youtube.com/watch?v=I1V9YWqRIeI&t=404s
+
+React bits styling: https://reactbits.dev/backgrounds

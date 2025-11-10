@@ -1,23 +1,24 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Schibsted_Grotesk, Martian_Mono } from 'next/font/google';
 // TypeScript may complain about the side-effect CSS import if no module declarations exist.
 // Silence the error here since this is a valid Next.js global stylesheet.
 // @ts-expect-error - Global CSS imports are valid in Next.js app directory
 import './globals.css';
+import LightRays from '@/components/light-rays';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const schibstedGrotesk = Schibsted_Grotesk({
+  variable: '--font-schibsted-grotesk',
   subsets: ['latin'],
 });
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+const martianMono = Martian_Mono({
+  variable: '--font-martian_mono',
   subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-  title: 'Next.js 16 Demo',
-  description: 'New next version for learning new things',
+  title: 'DevEvent',
+  description: 'The hub for every dev event that you cannot miss',
 };
 
 export default function RootLayout({
@@ -28,8 +29,20 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${schibstedGrotesk.variable} ${martianMono.variable} min-h-screen antialiased`}
       >
+        <LightRays
+          raysOrigin='top-center-offset'
+          raysColor='#00ffff'
+          raysSpeed={1}
+          lightSpread={0.8}
+          rayLength={2.5}
+          followMouse={true}
+          mouseInfluence={0.02}
+          noiseAmount={0}
+          distortion={0.01}
+        />
+
         {children}
       </body>
     </html>
