@@ -5,6 +5,7 @@ import { Schibsted_Grotesk, Martian_Mono } from 'next/font/google';
 // @ts-expect-error - Global CSS imports are valid in Next.js app directory
 import './globals.css';
 import LightRays from '@/components/light-rays';
+import Header from '@/components/header';
 
 const schibstedGrotesk = Schibsted_Grotesk({
   variable: '--font-schibsted-grotesk',
@@ -31,19 +32,21 @@ export default function RootLayout({
       <body
         className={`${schibstedGrotesk.variable} ${martianMono.variable} min-h-screen antialiased`}
       >
-        <LightRays
-          raysOrigin='top-center-offset'
-          raysColor='#00ffff'
-          raysSpeed={1}
-          lightSpread={0.8}
-          rayLength={2.5}
-          followMouse={true}
-          mouseInfluence={0.02}
-          noiseAmount={0}
-          distortion={0.01}
-        />
-
-        {children}
+        <Header />
+        <div className='absolute inset-0 z-[-1] min-h-screen'>
+          <LightRays
+            raysOrigin='top-center-offset'
+            raysColor='#00ffff'
+            raysSpeed={1}
+            lightSpread={0.8}
+            rayLength={2.5}
+            followMouse={true}
+            mouseInfluence={0.02}
+            noiseAmount={0}
+            distortion={0.01}
+          />
+        </div>
+        <main>{children}</main>
       </body>
     </html>
   );
