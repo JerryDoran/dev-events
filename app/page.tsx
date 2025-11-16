@@ -1,6 +1,9 @@
 import EventCard from '@/components/event-card';
 import ExploreButton from '@/components/explore-button';
 import { events } from '@/lib/constants';
+import posthog from 'posthog-js';
+
+posthog.capture('my event', { property: 'value' });
 
 export default function HomePage() {
   return (
