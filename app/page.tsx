@@ -1,11 +1,15 @@
-import EventCard from '@/components/event-card';
+import EventCard, { EventCardProps } from '@/components/event-card';
 import ExploreButton from '@/components/explore-button';
-import { events } from '@/lib/constants';
-import posthog from 'posthog-js';
+// import posthog from 'posthog-js';
 
-posthog.capture('my event', { property: 'value' });
+// posthog.capture('my event', { property: 'value' });
 
-export default function HomePage() {
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
+export default async function HomePage() {
+  const response = await fetch(`${BASE_URL}/api/events`);
+  const { events } = await response.json();
+
   return (
     <section className=''>
       <h1 className='text-center'>
@@ -18,9 +22,11 @@ export default function HomePage() {
       <div className='mt-20 space-y-7'>
         <h3>Featured Events</h3>
         <ul className='events'>
-          {events.map((event) => (
-            <EventCard key={event.title} {...event} />
-          ))}
+          {events &&
+            events.length > 0 &&
+            events.map((event: EventCardProps) => (
+              <EventCard key={event.title} {...event} />
+            ))}
         </ul>
       </div>
     </section>

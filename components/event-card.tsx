@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-type EventCardProps = {
+export type EventCardProps = {
   title: string;
   image: string;
   slug: string;
@@ -18,6 +18,7 @@ export default function EventCard({
   date,
   time,
 }: EventCardProps) {
+  console.log(title);
   return (
     <Link href={`/events/${slug}`} id='event-card'>
       <Image
