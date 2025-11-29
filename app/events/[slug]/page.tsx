@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import BookEvent from '@/components/book-event';
+import EventCard from '@/components/event-card';
+import { IEvent } from '@/database';
+import { getSimilarEventsBySlug } from '@/database/actions/event.actions';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 
@@ -33,13 +38,27 @@ function EventAgenda({ agendaItems }: { agendaItems: string[] }) {
   );
 }
 
+function EventTags({ tags }: { tags: string[] }) {
+  return (
+    <div className='flex flex-row gap-1.5 flex-wrap'>
+      {tags.map((tag, index) => (
+        <div key={index} className='pill'>
+          {tag}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default async function EventDetailsPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const request = await fetch(`${BASE_URL}/api/events/${slug}`);
+  const request = await fetch(`${BASE_URL}/api/events/${slug}`, {
+    next: { revalidate: 60 },
+  });
   const {
     event: {
       description,
@@ -58,6 +77,13 @@ export default async function EventDetailsPage({
   } = await request.json();
 
   if (!description) return notFound();
+
+  const bookings = 10;
+
+  const similarEvents = await getSimilarEventsBySlug(slug);
+
+  // console.log('SIMILAR EVENTS', similarEvents);
+
   return (
     <section id='event'>
       <div className='header'>
@@ -94,16 +120,39 @@ export default async function EventDetailsPage({
               label={audience}
             />
           </section>
-          <EventAgenda agendaItems={JSON.parse(agenda[0])} />
+          <EventAgenda agendaItems={JSON.parse(agenda)} />
           <section className='flex-col-gap-2'>
             <h2>About the Organizer</h2>
             <p>{organizer}</p>
           </section>
+          <EventTags tags={JSON.parse(tags)} />
         </div>
         {/* Booking form */}
         <aside className='booking'>
-          <p className='text-lg font-semibold'>Book Event</p>
+          <div className='signup-card'>
+            <h2>Book your spot</h2>
+            {bookings > 0 ? (
+              <p className='text-sm'>
+                Join {bookings} people who have already booked their spot
+              </p>
+            ) : (
+              <p className='text-sm'>Be the first to book your spot!</p>
+            )}
+            <BookEvent />
+          </div>
         </aside>
+      </div>
+      <div className='flex w-full flex-col gap-4 pt-20'>
+        <h2>Similar Events</h2>
+        <div className='events'>
+          {similarEvents.length > 0 ? (
+            similarEvents.map((similarEvent: any) => (
+              <EventCard key={similarEvent.title} {...similarEvent} />
+            ))
+          ) : (
+            <p>No similar events found.</p>
+          )}
+        </div>
       </div>
     </section>
   );

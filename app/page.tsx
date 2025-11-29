@@ -1,5 +1,6 @@
 import EventCard, { EventCardProps } from '@/components/event-card';
 import ExploreButton from '@/components/explore-button';
+import { cacheLife } from 'next/cache';
 // import posthog from 'posthog-js';
 
 // posthog.capture('my event', { property: 'value' });
@@ -7,6 +8,9 @@ import ExploreButton from '@/components/explore-button';
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export default async function HomePage() {
+  'use cache';
+
+  cacheLife('hours'); 
   const response = await fetch(`${BASE_URL}/api/events`);
   const { events } = await response.json();
 
@@ -25,7 +29,9 @@ export default async function HomePage() {
           {events &&
             events.length > 0 &&
             events.map((event: EventCardProps) => (
-              <EventCard key={event.title} {...event} />
+              <li key={event.title} className='list-none'>
+                <EventCard key={event.title} {...event} />
+              </li>
             ))}
         </ul>
       </div>
